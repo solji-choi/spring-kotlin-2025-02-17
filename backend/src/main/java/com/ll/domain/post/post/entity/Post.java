@@ -144,11 +144,13 @@ public class Post extends BaseTime {
                 .collect(Collectors.joining(";"));
 
         String fileName = UUID.randomUUID() + "." + fileExt;
-        long fileSize = Ut.file.getFileSize(filePath);
+        int fileSize = Ut.file.getFileSize(filePath);
+        int fileNo = getNextGenFileNo(typeCode);
 
         PostGenFile genFile = PostGenFile.builder()
                 .post(this)
                 .typeCode(typeCode)
+                .fileNo(fileNo)
                 .originalFileName(originalFileName)
                 .metadata(metadataStr)
                 .fileDateDir(Ut.date.getCurrentDateFormatted("yyyy_MM_dd"))
@@ -164,5 +166,13 @@ public class Post extends BaseTime {
         Ut.file.mv(filePath, genFile.getFilePath());
 
         return genFile;
+    }
+
+    private int getNextGenFileNo(String typeCode) {
+        return genFiles.stream()
+                .filter(genFile -> genFile.getTypeCode().equals(typeCode))
+                .mapToInt(PostGenFile::getFileNo)
+                .max()
+                .orElse(0) + 1;
     }
 }
