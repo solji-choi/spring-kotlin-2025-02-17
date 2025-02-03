@@ -153,7 +153,7 @@ public class BaseInitData {
                 true
         );
 
-        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath());
+        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath(), true);
         post8.addGenFile("attachment", newFilePath);
 
         IntStream.rangeClosed(9, 100).forEach(
