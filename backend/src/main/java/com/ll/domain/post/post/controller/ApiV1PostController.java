@@ -60,12 +60,11 @@ public class ApiV1PostController {
     @Transactional(readOnly = true)
     @Operation(summary = "통계정보")
     public PostStatisticsResBody statistics() {
-        Member actor = rq.getActor();
-
         return new PostStatisticsResBody(
-                10,
-                10,
-                10);
+                postService.count(),
+                postService.countByPublished(true),
+                postService.countByListed(true)
+        );
     }
 
     @GetMapping("/mine")
@@ -120,22 +119,14 @@ public class ApiV1PostController {
     }
 
 
-    record PostMakeTempResponseBody(
-            @NonNull
-            PostDto post
-    ) {
-    }
-
     @Transactional
     @PostMapping("/temp")
     @Operation(summary = "임시 글 생성")
-    public RsData<PostMakeTempResponseBody> makeTemp() {
+    public RsData<PostDto> makeTemp() {
         RsData<Post> findTempOrMakeRsData = postService.findTempOrMake(rq.getActor());
 
         return findTempOrMakeRsData.newDataOf(
-                new PostMakeTempResponseBody(
-                        new PostDto(findTempOrMakeRsData.getData())
-                )
+                new PostDto(findTempOrMakeRsData.getData())
         );
     }
 
@@ -155,7 +146,7 @@ public class ApiV1PostController {
     @PostMapping
     @Transactional
     @Operation(summary = "작성")
-    public RsData<PostWithContentDto> write(
+    public RsData<PostDto> write(
             @RequestBody @Valid PostWriteReqBody reqBody
     ) {
         Member actor = rq.getActor();
@@ -171,7 +162,7 @@ public class ApiV1PostController {
         return new RsData<>(
                 "201-1",
                 "%d번 글이 작성되었습니다.".formatted(post.getId()),
-                new PostWithContentDto(post)
+                new PostDto(post)
         );
     }
 
@@ -191,7 +182,7 @@ public class ApiV1PostController {
     @PutMapping("/{id}")
     @Transactional
     @Operation(summary = "수정")
-    public RsData<PostWithContentDto> modify(
+    public RsData<PostDto> modify(
             @PathVariable long id,
             @RequestBody @Valid PostModifyReqBody reqBody
     ) {
@@ -208,7 +199,7 @@ public class ApiV1PostController {
         return new RsData<>(
                 "200-1",
                 "%d번 글이 수정되었습니다.".formatted(id),
-                new PostWithContentDto(post)
+                new PostDto(post)
         );
     }
 
