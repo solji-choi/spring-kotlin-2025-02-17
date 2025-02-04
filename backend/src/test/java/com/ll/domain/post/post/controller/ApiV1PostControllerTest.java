@@ -752,4 +752,40 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("403-1"))
                 .andExpect(jsonPath("$.msg").value("권한이 없습니다."));
     }
+
+    @Test
+    @DisplayName("임시글 생성")
+    @WithUserDetails("user1")
+    void t25() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/v1/posts/temp")
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.resultCode").value("201-1"));
+    }
+
+    @Test
+    @DisplayName("임시글 생성, 이미 임시글이 있다면 생성하지 않음")
+    @WithUserDetails("user1")
+    void t26() throws Exception {
+        ResultActions resultActions1 = mvc
+                .perform(
+                        post("/api/v1/posts/temp")
+                )
+                .andDo(print());
+
+        ResultActions resultActions2 = mvc
+                .perform(
+                        post("/api/v1/posts/temp")
+                )
+                .andDo(print());
+
+        resultActions2
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("200-1"));
+    }
 }
