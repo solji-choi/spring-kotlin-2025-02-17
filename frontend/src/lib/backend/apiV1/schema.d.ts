@@ -4,24 +4,6 @@
  */
 
 export interface paths {
-    "/api/v1/posts/{postId}/comments/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** 수정 */
-        put: operations["modify"];
-        post?: never;
-        /** 삭제 */
-        delete: operations["delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/posts/{id}": {
         parameters: {
             query?: never;
@@ -35,13 +17,13 @@ export interface paths {
          */
         get: operations["item"];
         /** 수정 */
-        put: operations["modify_1"];
+        put: operations["modify"];
         post?: never;
         /**
          * 삭제
          * @description 작성자 본인 뿐 아니라 관리자도 삭제 가능
          */
-        delete: operations["delete_1"];
+        delete: operations["delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -83,18 +65,17 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/posts/{postId}/comments": {
+    "/api/v1/posts/{postId}/genFiles/{typeCode}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** 다건조회 */
-        get: operations["items_1"];
+        get?: never;
         put?: never;
-        /** 작성 */
-        post: operations["write_1"];
+        /** 등록 */
+        post: operations["makeNewFile"];
         delete?: never;
         options?: never;
         head?: never;
@@ -180,7 +161,7 @@ export interface paths {
             cookie?: never;
         };
         /** 회원 다건 조회 */
-        get: operations["items_2"];
+        get: operations["items_1"];
         put?: never;
         post?: never;
         delete?: never;
@@ -236,28 +217,6 @@ export interface components {
             msg: string;
             data: components["schemas"]["Empty"];
         };
-        PostCommentModifyReqBody: {
-            content: string;
-        };
-        PostCommentDto: {
-            /** Format: int64 */
-            id: number;
-            /** Format: date-time */
-            createDate: string;
-            /** Format: date-time */
-            modifyDate: string;
-            /** Format: int64 */
-            postId: number;
-            /** Format: int64 */
-            authorId: number;
-            authorName: string;
-            content: string;
-        };
-        RsDataPostCommentDto: {
-            resultCode: string;
-            msg: string;
-            data: components["schemas"]["PostCommentDto"];
-        };
         PostModifyReqBody: {
             title: string;
             content: string;
@@ -311,8 +270,31 @@ export interface components {
             published?: boolean;
             listed?: boolean;
         };
-        PostCommentWriteReqBody: {
-            content: string;
+        PostGenFileDto: {
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            /** Format: int64 */
+            postId: number;
+            fileName: string;
+            typeCode: string;
+            fileExtTypeCode: string;
+            fileExtType2Code: string;
+            /** Format: int64 */
+            fileSize: number;
+            /** Format: int64 */
+            fileNo: number;
+            fileExt: string;
+            fileDateDir: string;
+            originalFileName: string;
+        };
+        RsDataPostGenFileDto: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostGenFileDto"];
         };
         MemberLoginReqBody: {
             username: string;
@@ -398,74 +380,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    modify: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                postId: number;
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PostCommentModifyReqBody"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostCommentDto"];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
-                };
-            };
-        };
-    };
-    delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                postId: number;
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
-                };
-            };
-        };
-    };
     item: {
         parameters: {
             query?: never;
@@ -497,7 +411,7 @@ export interface operations {
             };
         };
     };
-    modify_1: {
+    modify: {
         parameters: {
             query?: never;
             header?: never;
@@ -532,7 +446,7 @@ export interface operations {
             };
         };
     };
-    delete_1: {
+    delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -692,49 +606,19 @@ export interface operations {
             };
         };
     };
-    items_1: {
+    makeNewFile: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 postId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["PostCommentDto"][];
-                };
-            };
-            /** @description Bad Request */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
-                };
-            };
-        };
-    };
-    write_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                postId: number;
+                typeCode: string;
             };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PostCommentWriteReqBody"];
+                "multipart/form-data": unknown;
             };
         };
         responses: {
@@ -744,7 +628,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostCommentDto"];
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostGenFileDto"];
                 };
             };
             /** @description Bad Request */
@@ -887,7 +771,7 @@ export interface operations {
             };
         };
     };
-    items_2: {
+    items_1: {
         parameters: {
             query?: {
                 searchKeywordType?: "all" | "username" | "nickname";
