@@ -14,7 +14,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @SuperBuilder
 @NoArgsConstructor
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY) // AUTO_INCREMENT
     @Setter(AccessLevel.PROTECTED)

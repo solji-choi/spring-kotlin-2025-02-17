@@ -9,7 +9,10 @@ import com.ll.global.rsData.RsData;
 import com.ll.standard.base.Empty;
 import com.ll.standard.util.Ut;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.*;
@@ -189,6 +192,43 @@ public class Post extends BaseTime {
                     String filePath = genFile.getFilePath();
                     genFiles.remove(genFile);
                     Ut.file.rm(filePath);
+                });
+    }
+
+    public void modifyGenFile(String typeCode, int fileNo, String filePath) {
+        getGenFileByTypeCodeAndFileNo(
+                typeCode,
+                fileNo
+        )
+                .ifPresent(genFile -> {
+                    Ut.file.rm(genFile.getFilePath());
+
+                    String originalFileName = Ut.file.getOriginalFileName(filePath);
+                    String fileExt = Ut.file.getFileExt(filePath);
+                    String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
+                    String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
+
+                    Map<String, Object> metadata = Ut.file.getMetadata(filePath);
+
+                    String metadataStr = metadata
+                            .entrySet()
+                            .stream()
+                            .map(entry -> entry.getKey() + "-" + entry.getValue())
+                            .collect(Collectors.joining(";"));
+
+                    String fileName = UUID.randomUUID() + "." + fileExt;
+                    int fileSize = Ut.file.getFileSize(filePath);
+
+                    genFile.setOriginalFileName(originalFileName);
+                    genFile.setMetadata(metadataStr);
+                    genFile.setFileDateDir(Ut.date.getCurrentDateFormatted("yyyy_MM_dd"));
+                    genFile.setFileExt(fileExt);
+                    genFile.setFileExtTypeCode(fileExtTypeCode);
+                    genFile.setFileExtType2Code(fileExtType2Code);
+                    genFile.setFileName(fileName);
+                    genFile.setFileSize(fileSize);
+
+                    Ut.file.mv(filePath, genFile.getFilePath());
                 });
     }
 }
