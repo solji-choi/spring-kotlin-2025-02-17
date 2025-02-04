@@ -75,5 +75,22 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const post = postResponse.data;
 
-  return <ClientPage post={post} />;
+  const postGenFilesResponse = await client.GET(
+    "/api/v1/posts/{postId}/genFiles",
+    {
+      params: { path: { postId: post.id } },
+    },
+  );
+
+  if (postGenFilesResponse.error) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        {postGenFilesResponse.error.msg}
+      </div>
+    );
+  }
+
+  const postGenFiles = postGenFilesResponse.data;
+
+  return <ClientPage post={post} postGenFiles={postGenFiles} />;
 }

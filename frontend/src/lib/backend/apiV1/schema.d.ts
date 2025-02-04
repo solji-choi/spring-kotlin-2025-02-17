@@ -4,6 +4,24 @@
  */
 
 export interface paths {
+    "/api/v1/posts/{postId}/comments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** 수정 */
+        put: operations["modify"];
+        post?: never;
+        /** 삭제 */
+        delete: operations["delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/posts/{id}": {
         parameters: {
             query?: never;
@@ -17,13 +35,13 @@ export interface paths {
          */
         get: operations["item"];
         /** 수정 */
-        put: operations["modify"];
+        put: operations["modify_1"];
         post?: never;
         /**
          * 삭제
          * @description 작성자 본인 뿐 아니라 관리자도 삭제 가능
          */
-        delete: operations["delete"];
+        delete: operations["delete_1"];
         options?: never;
         head?: never;
         patch?: never;
@@ -82,6 +100,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/posts/{postId}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 다건조회 */
+        get: operations["items_1"];
+        put?: never;
+        /** 작성 */
+        post: operations["write_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/members/login": {
         parameters: {
             query?: never;
@@ -113,6 +149,23 @@ export interface paths {
         put?: never;
         /** 회원가입 */
         post: operations["join"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/posts/{postId}/genFiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 다건조회 */
+        get: operations["items_2"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -161,7 +214,7 @@ export interface paths {
             cookie?: never;
         };
         /** 회원 다건 조회 */
-        get: operations["items_1"];
+        get: operations["items_3"];
         put?: never;
         post?: never;
         delete?: never;
@@ -216,6 +269,28 @@ export interface components {
             resultCode: string;
             msg: string;
             data: components["schemas"]["Empty"];
+        };
+        PostCommentModifyReqBody: {
+            content: string;
+        };
+        PostCommentDto: {
+            /** Format: int64 */
+            id: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            /** Format: int64 */
+            postId: number;
+            /** Format: int64 */
+            authorId: number;
+            authorName: string;
+            content: string;
+        };
+        RsDataPostCommentDto: {
+            resultCode: string;
+            msg: string;
+            data: components["schemas"]["PostCommentDto"];
         };
         PostModifyReqBody: {
             title: string;
@@ -295,6 +370,9 @@ export interface components {
             resultCode: string;
             msg: string;
             data: components["schemas"]["PostGenFileDto"];
+        };
+        PostCommentWriteReqBody: {
+            content: string;
         };
         MemberLoginReqBody: {
             username: string;
@@ -380,6 +458,74 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    modify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostCommentModifyReqBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostCommentDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
     item: {
         parameters: {
             query?: never;
@@ -411,7 +557,7 @@ export interface operations {
             };
         };
     };
-    modify: {
+    modify_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -446,7 +592,7 @@ export interface operations {
             };
         };
     };
-    delete: {
+    delete_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -642,6 +788,72 @@ export interface operations {
             };
         };
     };
+    items_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["PostCommentDto"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    write_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostCommentWriteReqBody"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostCommentDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
     login: {
         parameters: {
             query?: never;
@@ -695,6 +907,37 @@ export interface operations {
                 };
                 content: {
                     "application/json;charset=UTF-8": components["schemas"]["RsDataMemberDto"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataEmpty"];
+                };
+            };
+        };
+    };
+    items_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                postId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json;charset=UTF-8": components["schemas"]["PostGenFileDto"][];
                 };
             };
             /** @description Bad Request */
@@ -771,7 +1014,7 @@ export interface operations {
             };
         };
     };
-    items_1: {
+    items_3: {
         parameters: {
             query?: {
                 searchKeywordType?: "all" | "username" | "nickname";
