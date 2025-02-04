@@ -133,6 +133,10 @@ public class Post extends BaseTime {
     }
 
     public PostGenFile addGenFile(String typeCode, String filePath) {
+        return addGenFile(typeCode, 0, filePath);
+    }
+
+    private PostGenFile addGenFile(String typeCode, int fileNo, String filePath) {
         String originalFileName = Ut.file.getOriginalFileName(filePath);
         String fileExt = Ut.file.getFileExt(filePath);
         String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
@@ -148,7 +152,7 @@ public class Post extends BaseTime {
 
         String fileName = UUID.randomUUID() + "." + fileExt;
         int fileSize = Ut.file.getFileSize(filePath);
-        int fileNo = getNextGenFileNo(typeCode);
+        fileNo = fileNo == 0 ? getNextGenFileNo(typeCode) : fileNo;
 
         PostGenFile genFile = PostGenFile.builder()
                 .post(this)
@@ -230,5 +234,18 @@ public class Post extends BaseTime {
 
                     Ut.file.mv(filePath, genFile.getFilePath());
                 });
+    }
+
+    public void putGenFile(String typeCode, int fileNo, String filePath) {
+        Optional<PostGenFile> opPostGenFile = getGenFileByTypeCodeAndFileNo(
+                typeCode,
+                fileNo
+        );
+
+        if (opPostGenFile.isPresent()) {
+            modifyGenFile(typeCode, fileNo, filePath);
+        } else {
+            addGenFile(typeCode, fileNo, filePath);
+        }
     }
 }

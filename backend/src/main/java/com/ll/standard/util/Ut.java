@@ -122,6 +122,10 @@ public class Ut {
             put("video/x-msvideo", "avi");
         }};
 
+        @SneakyThrows
+        public static String downloadByHttp(String url, String dirPath) {
+            return downloadByHttp(url, dirPath, true);
+        }
 
         @SneakyThrows
         public static String downloadByHttp(String url, String dirPath, boolean uniqueFilename) {
