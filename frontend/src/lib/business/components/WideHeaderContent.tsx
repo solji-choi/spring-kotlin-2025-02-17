@@ -1,10 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import client from "@/lib/backend/client";
 
 import { useGlobalLoginMember } from "@/stores/auth/loginMember";
 
 import { Button } from "@/components/ui/button";
+
+import { useToast } from "@/hooks/use-toast";
 
 import {
   MonitorCog,
@@ -24,6 +29,8 @@ export default function WideHeaderContent({
 }: {
   className?: string;
 }) {
+  const { toast } = useToast();
+  const router = useRouter();
   const { isLogin, isUserPage, isAdminPage } = useGlobalLoginMember();
 
   return (
@@ -39,10 +46,26 @@ export default function WideHeaderContent({
             </Link>
           </Button>
           {isLogin && (
-            <Button variant="link" asChild>
-              <Link href="/post/write">
-                <Pencil /> 작성
-              </Link>
+            <Button
+              variant="link"
+              onClick={() =>
+                client.POST("/api/v1/posts/temp").then((response) => {
+                  if (response.error) {
+                    toast({
+                      title: response.error.msg,
+                      variant: "destructive",
+                    });
+                  } else {
+                    toast({
+                      title: response.data.msg,
+                    });
+
+                    router.replace(`/post/${response.data.data.post.id}/edit`);
+                  }
+                })
+              }
+            >
+              <Pencil /> 작성
             </Button>
           )}
           {isLogin && (
