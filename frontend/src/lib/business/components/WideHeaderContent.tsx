@@ -1,20 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-
-import client from "@/lib/backend/client";
 
 import { useGlobalLoginMember } from "@/stores/auth/loginMember";
 
 import { Button } from "@/components/ui/button";
 
-import { useToast } from "@/hooks/use-toast";
-
 import {
   MonitorCog,
   NotebookTabs,
-  Pencil,
   TableOfContents,
   UserRoundSearch,
 } from "lucide-react";
@@ -22,6 +16,7 @@ import {
 import LoginButton from "./LoginButton";
 import Logo from "./Logo";
 import MeMenuButton from "./MeMenuButton";
+import PostWriteButton from "./PostWriteButton";
 import ThemeToggleButton from "./ThemeToggleButton";
 
 export default function WideHeaderContent({
@@ -29,8 +24,6 @@ export default function WideHeaderContent({
 }: {
   className?: string;
 }) {
-  const { toast } = useToast();
-  const router = useRouter();
   const { isLogin, isUserPage, isAdminPage } = useGlobalLoginMember();
 
   return (
@@ -45,29 +38,7 @@ export default function WideHeaderContent({
               <TableOfContents /> 글
             </Link>
           </Button>
-          {isLogin && (
-            <Button
-              variant="link"
-              onClick={() =>
-                client.POST("/api/v1/posts/temp").then((response) => {
-                  if (response.error) {
-                    toast({
-                      title: response.error.msg,
-                      variant: "destructive",
-                    });
-                  } else {
-                    toast({
-                      title: response.data.msg,
-                    });
-
-                    router.replace(`/post/${response.data.data.post.id}/edit`);
-                  }
-                })
-              }
-            >
-              <Pencil /> 작성
-            </Button>
-          )}
+          {isLogin && <PostWriteButton className="w-full justify-start" text />}
           {isLogin && (
             <Button variant="link" asChild>
               <Link href="/post/mine">
