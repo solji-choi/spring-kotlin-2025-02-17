@@ -158,10 +158,10 @@ public class ApiV1PostControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.resultCode").value("400-1"))
                 .andExpect(jsonPath("$.msg").value("""
-                        content-Length-length must be between 2 and 10000000
-                        content-NotBlank-may not be empty
-                        title-Length-length must be between 2 and 100
-                        title-NotBlank-may not be empty
+                        content-NotBlank-must not be blank
+                        content-Size-size must be between 2 and 10000000
+                        title-NotBlank-must not be blank
+                        title-Size-size must be between 2 and 100
                         """.stripIndent().trim()));
     }
 
@@ -263,10 +263,10 @@ public class ApiV1PostControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.resultCode").value("400-1"))
                 .andExpect(jsonPath("$.msg").value("""
-                        content-Length-length must be between 2 and 10000000
-                        content-NotBlank-may not be empty
-                        title-Length-length must be between 2 and 100
-                        title-NotBlank-may not be empty
+                        content-NotBlank-must not be blank
+                        content-Size-size must be between 2 and 10000000
+                        title-NotBlank-must not be blank
+                        title-Size-size must be between 2 and 100
                         """.stripIndent().trim()));
     }
 
