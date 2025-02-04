@@ -5,6 +5,7 @@ import com.ll.global.app.AppConfig;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.SneakyThrows;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.SecretKey;
 import javax.imageio.ImageIO;
@@ -320,6 +321,20 @@ public class Ut {
 
             return metadata;
         }
+
+        @SneakyThrows
+        public static String toFile(MultipartFile multipartFile, String dirPath) {
+            if (multipartFile == null) return "";
+            if (multipartFile.isEmpty()) return "";
+
+            String filePath = dirPath + "/" + UUID.randomUUID() + ORIGINAL_FILE_NAME_SEPARATOR + multipartFile.getOriginalFilename();
+
+            Ut.file.mkdir(dirPath);
+            multipartFile.transferTo(new File(filePath));
+
+            return filePath;
+        }
+
     }
 
     public static class cmd {
