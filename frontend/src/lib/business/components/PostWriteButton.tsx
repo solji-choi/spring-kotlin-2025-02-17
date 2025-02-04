@@ -42,7 +42,7 @@ const PostWriteButton = ({
         title: response.data.msg,
       });
 
-      router.replace(`/post/${response.data.data.post.id}/edit`);
+      router.replace(`/post/${response.data.data.id}/edit`);
     }
   };
 
