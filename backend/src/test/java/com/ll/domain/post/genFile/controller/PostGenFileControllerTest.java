@@ -53,6 +53,6 @@ public class PostGenFileControllerTest {
                 .andExpect(handler().methodName("download"))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + postGenFile1.getOriginalFileName() + "\""))
-                .andExpect(content().contentType(MediaType.IMAGE_JPEG));
+                .andExpect(content().contentType(MediaType.IMAGE_GIF));
     }
 }

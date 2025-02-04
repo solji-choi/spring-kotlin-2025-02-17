@@ -2,9 +2,8 @@ package com.ll.domain.post.genFile.controller;
 
 import com.ll.domain.member.member.service.MemberService;
 import com.ll.domain.post.genFile.entity.PostGenFile;
-import com.ll.domain.post.post.entity.Post;
 import com.ll.domain.post.post.service.PostService;
-import com.ll.global.app.AppConfig;
+import com.ll.standard.sampleResource.SampleResource;
 import com.ll.standard.util.Ut;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -81,18 +80,14 @@ public class ApiV1PostGenFileControllerTest {
     @DisplayName("새 파일 등록")
     @WithUserDetails("user4")
     void t2() throws Exception {
-        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath());
+        String newFilePath = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
 
         ResultActions resultActions = mvc
                 .perform(
                         multipart("/api/v1/posts/9/genFiles/" + PostGenFile.TypeCode.attachment)
-                                .file(new MockMultipartFile("file", "300.jpg", "image/jpeg", new FileInputStream(newFilePath)))
+                                .file(new MockMultipartFile("file", "200.jpg", "image/jpeg", new FileInputStream(newFilePath)))
                 )
                 .andDo(print());
-
-        Post post = postService.findById(9).get();
-        System.out.println(post.getGenFiles().size());
-        List<PostGenFile> genFiles = post.getGenFiles();
 
         resultActions
                 .andExpect(handler().handlerType(ApiV1PostGenFileController.class))
@@ -111,7 +106,7 @@ public class ApiV1PostGenFileControllerTest {
                 .andExpect(jsonPath("$.data.fileNo").value(4))
                 .andExpect(jsonPath("$.data.fileExt").value("jpg"))
                 .andExpect(jsonPath("$.data.fileDateDir").isString())
-                .andExpect(jsonPath("$.data.originalFileName").value("300.jpg"))
+                .andExpect(jsonPath("$.data.originalFileName").value("200.jpg"))
                 .andExpect(jsonPath("$.data.downloadUrl").isString())
                 .andExpect(jsonPath("$.data.publicUrl").isString())
                 .andExpect(jsonPath("$.data.fileName").isString());

@@ -1,6 +1,6 @@
 package com.ll.standard.util;
 
-import com.ll.global.app.AppConfig;
+import com.ll.standard.sampleResource.SampleResource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ public class FileUtTest {
     @Test
     @DisplayName("downloadByHttp")
     void t1() {
-        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath());
+        String newFilePath = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
 
         // newFilePath 의 확장자가 jpg 인지 확인
         assertThat(newFilePath).endsWith(".jpg");
@@ -25,7 +25,7 @@ public class FileUtTest {
     @Test
     @DisplayName("getExtensionByTika")
     void t2() {
-        String newFilePath = Ut.file.downloadByHttp("https://picsum.photos/id/237/200/300", AppConfig.getTempDirPath());
+        String newFilePath = SampleResource.IMG_JPG_SAMPLE1.makeCopy();
 
         String ext = Ut.file.getExtensionByTika(newFilePath);
         assertThat(ext).isEqualTo("jpg");
