@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { components } from "@/lib/backend/apiV1/schema";
+import { getDateHr, getFileSizeHr } from "@/lib/business/utils";
 
 import { LoginMemberContext } from "@/stores/auth/loginMember";
 
@@ -56,13 +57,7 @@ export default function ClientPage({
                   {post.authorName}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(post.createDate).toLocaleString("ko-KR", {
-                    year: "2-digit",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  {getDateHr(post.createDate)}
                 </p>
               </div>
             </div>
@@ -83,6 +78,13 @@ export default function ClientPage({
         </CardHeader>
         <CardContent>
           <div className="whitespace-pre-line">{post.content}</div>
+          <div>
+            {post.createDate != post.modifyDate && (
+              <p className="text-xs text-muted-foreground">
+                {getDateHr(post.modifyDate)}에 수정됨
+              </p>
+            )}
+          </div>
         </CardContent>
         <CardFooter>
           <div className="grid gap-4">
@@ -108,13 +110,8 @@ export default function ClientPage({
                       )}
 
                       <span>
-                        {file.originalFileName}(
-                        {file.fileSize >= 1024 * 1024
-                          ? `${(file.fileSize / (1024 * 1024)).toFixed(1)}MB`
-                          : file.fileSize >= 1024
-                            ? `${(file.fileSize / 1024).toFixed(1)}KB`
-                            : `${file.fileSize}B`}
-                        ) 다운로드
+                        {file.originalFileName}({getFileSizeHr(file.fileSize)})
+                        다운로드
                       </span>
                     </a>
                   </Button>
