@@ -48,8 +48,8 @@ export default function ClientPage({
             <Download />
 
             <span>
-              {genFile.originalFileName}({getFileSizeHr(genFile.fileSize)})
-              다운로드
+              {genFile.originalFileName}
+              <br />({getFileSizeHr(genFile.fileSize)}) 다운로드
             </span>
           </a>
         </Button>

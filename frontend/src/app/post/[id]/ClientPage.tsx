@@ -99,19 +99,9 @@ export default function ClientPage({
                     >
                       <Download />
 
-                      {file.fileExtTypeCode == "img" && (
-                        <Image
-                          src={file.publicUrl}
-                          alt={file.originalFileName}
-                          width={16}
-                          height={16}
-                          className="align-self h-[16px] w-[16px]"
-                        />
-                      )}
-
                       <span>
-                        {file.originalFileName}({getFileSizeHr(file.fileSize)})
-                        다운로드
+                        {file.originalFileName}
+                        <br />({getFileSizeHr(file.fileSize)}) 다운로드
                       </span>
                     </a>
                   </Button>
