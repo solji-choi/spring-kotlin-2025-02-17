@@ -41,7 +41,15 @@ export default function ClientPage({
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center">
-          <img src={genFile.publicUrl} alt="" />
+          {genFile.fileExtTypeCode == "img" && (
+            <img src={genFile.publicUrl} alt="" />
+          )}
+          {genFile.fileExtTypeCode == "audio" && (
+            <audio src={genFile.publicUrl} controls />
+          )}
+          {genFile.fileExtTypeCode == "video" && (
+            <video src={genFile.publicUrl} controls />
+          )}
         </div>
         <Button variant="link" asChild className="justify-start">
           <a href={genFile.downloadUrl} className="flex items-center gap-2">
