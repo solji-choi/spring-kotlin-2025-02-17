@@ -92,8 +92,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 등록 */
-        post: operations["makeNewFile"];
+        /** 다건등록 */
+        post: operations["makeNewItems"];
         delete?: never;
         options?: never;
         head?: never;
@@ -400,10 +400,10 @@ export interface components {
             downloadUrl: string;
             publicUrl: string;
         };
-        RsDataPostGenFileDto: {
+        RsDataListPostGenFileDto: {
             resultCode: string;
             msg: string;
-            data: components["schemas"]["PostGenFileDto"];
+            data: components["schemas"]["PostGenFileDto"][];
         };
         PostCommentWriteReqBody: {
             content: string;
@@ -789,7 +789,7 @@ export interface operations {
             };
         };
     };
-    makeNewFile: {
+    makeNewItems: {
         parameters: {
             query?: never;
             header?: never;
@@ -801,7 +801,10 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "multipart/form-data": unknown;
+                "multipart/form-data": {
+                    /** @description 업로드할 파일 목록 */
+                    files: string[];
+                };
             };
         };
         responses: {
@@ -811,7 +814,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json;charset=UTF-8": components["schemas"]["RsDataPostGenFileDto"];
+                    "application/json;charset=UTF-8": components["schemas"]["RsDataListPostGenFileDto"];
                 };
             };
             /** @description Bad Request */
