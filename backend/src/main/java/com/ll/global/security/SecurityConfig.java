@@ -29,7 +29,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers(HttpMethod.GET, "/api/*/posts/{id:\\d+}", "/api/*/posts", "/api/*/posts/{postId:\\d+}/comments", "/api/*/posts/{postId:\\d+}/genFiles")
+                                .requestMatchers(HttpMethod.GET, "/api/*/posts/{id:\\d+}", "/api/*/posts", "/api/*/posts/{postId:\\d+}/comments", "/api/*/posts/{postId:\\d+}/genFiles", "/api/*/posts/{postId:\\d+}/genFiles/{id:\\d+}")
                                 .permitAll()
                                 .requestMatchers("/api/*/members/login", "/api/*/members/logout", "/api/*/members/join")
                                 .permitAll()

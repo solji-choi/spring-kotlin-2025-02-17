@@ -63,7 +63,7 @@ public class Post extends BaseTime {
 
     public Optional<PostComment> getCommentById(long commentId) {
         return comments.stream()
-                .filter(comment -> comment.getId() == commentId)
+                .filter(comment -> comment.getId().equals(commentId))
                 .findFirst();
     }
 
@@ -181,6 +181,12 @@ public class Post extends BaseTime {
                 .mapToInt(PostGenFile::getFileNo)
                 .max()
                 .orElse(0) + 1;
+    }
+
+    public Optional<PostGenFile> getGenFileById(long id) {
+        return genFiles.stream()
+                .filter(genFile -> genFile.getId().equals(id))
+                .findFirst();
     }
 
     public Optional<PostGenFile> getGenFileByTypeCodeAndFileNo(PostGenFile.TypeCode typeCode, int fileNo) {
