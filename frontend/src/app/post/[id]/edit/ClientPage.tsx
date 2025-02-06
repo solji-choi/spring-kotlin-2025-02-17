@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import client from "@/lib/backend/client";
@@ -182,7 +183,9 @@ export default function ClientPage({
             name="attachment_0"
             render={({ field: { onChange, ...field } }) => (
               <FormItem>
-                <FormLabel>첨부파일(드래그 앤 드롭 가능, 최대 5개)</FormLabel>
+                <FormLabel>
+                  첨부파일(드래그 앤 드롭 가능, 다중 업로드 최대 5개 가능)
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="file"
@@ -200,6 +203,11 @@ export default function ClientPage({
               </FormItem>
             )}
           />
+          <Button variant="outline" asChild>
+            <Link href={`/post/${post.id}/genFile/listForEdit`}>
+              기존 첨부파일 변경/삭제
+            </Link>
+          </Button>
           <FormField
             control={form.control}
             name="content"
@@ -209,7 +217,7 @@ export default function ClientPage({
                 <FormControl>
                   <Textarea
                     {...field}
-                    className="h-[calc(100dvh-460px)] min-h-[300px]"
+                    className="h-[calc(100dvh-520px)] min-h-[300px]"
                     placeholder={post.content}
                   />
                 </FormControl>
