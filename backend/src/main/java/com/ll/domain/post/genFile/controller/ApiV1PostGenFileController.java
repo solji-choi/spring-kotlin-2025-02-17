@@ -12,8 +12,6 @@ import com.ll.global.rsData.RsData;
 import com.ll.standard.base.Empty;
 import com.ll.standard.util.Ut;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +40,6 @@ public class ApiV1PostGenFileController {
     public RsData<List<PostGenFileDto>> makeNewItems(
             @PathVariable long postId,
             @PathVariable PostGenFile.TypeCode typeCode,
-            @Parameter(
-                    description = "업로드할 파일 목록",
-                    content = @Content(
-                            mediaType = "multipart/form-data"
-                    )
-            )
             @NonNull @RequestPart("files") MultipartFile[] files
     ) {
         Member actor = rq.getActor();
@@ -139,6 +131,34 @@ public class ApiV1PostGenFileController {
         return new RsData<>(
                 "200-1",
                 "%d번 파일이 삭제되었습니다.".formatted(id)
+        );
+    }
+
+
+    @PutMapping(value = "/{id}", consumes = MULTIPART_FORM_DATA_VALUE)
+    @Transactional
+    @Operation(summary = "수정")
+    public RsData<PostGenFileDto> modify(
+            @PathVariable long postId,
+            @PathVariable long id,
+            @NonNull @RequestPart("file") MultipartFile file
+    ) {
+        Post post = postService.findById(postId).orElseThrow(
+                () -> new ServiceException("404-1", "%d번 글은 존재하지 않습니다.".formatted(postId))
+        );
+
+        PostGenFile postGenFile = post.getGenFileById(id).orElseThrow(
+                () -> new ServiceException("404-2", "%d번 파일은 존재하지 않습니다.".formatted(id))
+        );
+
+        String filePath = Ut.file.toFile(file, AppConfig.getTempDirPath());
+
+        post.modifyGenFile(postGenFile, filePath);
+
+        return new RsData<>(
+                "200-1",
+                "%d번 파일이 수정되었습니다.".formatted(id),
+                new PostGenFileDto(postGenFile)
         );
     }
 }

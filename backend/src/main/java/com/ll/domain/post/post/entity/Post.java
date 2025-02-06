@@ -15,7 +15,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
@@ -132,47 +135,47 @@ public class Post extends BaseTime {
                 });
     }
 
+    private PostGenFile processGenFile(PostGenFile oldPostGenFile, PostGenFile.TypeCode typeCode, int fileNo, String filePath) {
+        boolean isModify = oldPostGenFile != null;
+        String originalFileName = Ut.file.getOriginalFileName(filePath);
+        String fileExt = Ut.file.getFileExt(filePath);
+        String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
+        String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
+        String metadataStr = Ut.file.getMetadata(filePath).entrySet().stream()
+                .map(entry -> entry.getKey() + "-" + entry.getValue())
+                .collect(Collectors.joining(";"));
+        String fileName = isModify ? Ut.file.withNewExt(oldPostGenFile.getFileName(), fileExt) : UUID.randomUUID() + "." + fileExt;
+        int fileSize = Ut.file.getFileSize(filePath);
+        fileNo = fileNo == 0 ? getNextGenFileNo(typeCode) : fileNo;
+
+        PostGenFile genFile = isModify ? oldPostGenFile : PostGenFile
+                .builder()
+                .post(this)
+                .typeCode(typeCode)
+                .fileNo(fileNo)
+                .build();
+
+        genFile.setOriginalFileName(originalFileName);
+        genFile.setMetadata(metadataStr);
+        genFile.setFileDateDir(Ut.date.getCurrentDateFormatted("yyyy_MM_dd"));
+        genFile.setFileExt(fileExt);
+        genFile.setFileExtTypeCode(fileExtTypeCode);
+        genFile.setFileExtType2Code(fileExtType2Code);
+        genFile.setFileName(fileName);
+        genFile.setFileSize(fileSize);
+
+        if (!isModify) genFiles.add(genFile);
+        Ut.file.mv(filePath, genFile.getFilePath());
+
+        return genFile;
+    }
+
     public PostGenFile addGenFile(PostGenFile.TypeCode typeCode, String filePath) {
         return addGenFile(typeCode, 0, filePath);
     }
 
     private PostGenFile addGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filePath) {
-        String originalFileName = Ut.file.getOriginalFileName(filePath);
-        String fileExt = Ut.file.getFileExt(filePath);
-        String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
-        String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
-
-        Map<String, Object> metadata = Ut.file.getMetadata(filePath);
-
-        String metadataStr = metadata
-                .entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + "-" + entry.getValue())
-                .collect(Collectors.joining(";"));
-
-        String fileName = UUID.randomUUID() + "." + fileExt;
-        int fileSize = Ut.file.getFileSize(filePath);
-        fileNo = fileNo == 0 ? getNextGenFileNo(typeCode) : fileNo;
-
-        PostGenFile genFile = PostGenFile.builder()
-                .post(this)
-                .typeCode(typeCode)
-                .fileNo(fileNo)
-                .originalFileName(originalFileName)
-                .metadata(metadataStr)
-                .fileDateDir(Ut.date.getCurrentDateFormatted("yyyy_MM_dd"))
-                .fileExt(fileExt)
-                .fileExtTypeCode(fileExtTypeCode)
-                .fileExtType2Code(fileExtType2Code)
-                .fileName(fileName)
-                .fileSize(fileSize)
-                .build();
-
-        genFiles.add(genFile);
-
-        Ut.file.mv(filePath, genFile.getFilePath());
-
-        return genFile;
+        return processGenFile(null, typeCode, fileNo, filePath);
     }
 
     private int getNextGenFileNo(PostGenFile.TypeCode typeCode) {
@@ -206,41 +209,15 @@ public class Post extends BaseTime {
         genFiles.remove(postGenFile);
     }
 
+    public void modifyGenFile(PostGenFile postGenFile, String filePath) {
+        processGenFile(postGenFile, postGenFile.getTypeCode(), postGenFile.getFileNo(), filePath);
+    }
+
     public void modifyGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filePath) {
         getGenFileByTypeCodeAndFileNo(
                 typeCode,
                 fileNo
-        )
-                .ifPresent(genFile -> {
-                    Ut.file.rm(genFile.getFilePath());
-
-                    String originalFileName = Ut.file.getOriginalFileName(filePath);
-                    String fileExt = Ut.file.getFileExt(filePath);
-                    String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
-                    String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
-
-                    Map<String, Object> metadata = Ut.file.getMetadata(filePath);
-
-                    String metadataStr = metadata
-                            .entrySet()
-                            .stream()
-                            .map(entry -> entry.getKey() + "-" + entry.getValue())
-                            .collect(Collectors.joining(";"));
-
-                    String fileName = UUID.randomUUID() + "." + fileExt;
-                    int fileSize = Ut.file.getFileSize(filePath);
-
-                    genFile.setOriginalFileName(originalFileName);
-                    genFile.setMetadata(metadataStr);
-                    genFile.setFileDateDir(Ut.date.getCurrentDateFormatted("yyyy_MM_dd"));
-                    genFile.setFileExt(fileExt);
-                    genFile.setFileExtTypeCode(fileExtTypeCode);
-                    genFile.setFileExtType2Code(fileExtType2Code);
-                    genFile.setFileName(fileName);
-                    genFile.setFileSize(fileSize);
-
-                    Ut.file.mv(filePath, genFile.getFilePath());
-                });
+        ).ifPresent(postGenFile -> modifyGenFile(postGenFile, filePath));
     }
 
     public void putGenFile(PostGenFile.TypeCode typeCode, int fileNo, String filePath) {
