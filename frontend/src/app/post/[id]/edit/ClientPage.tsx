@@ -86,6 +86,10 @@ export default function ClientPage({
       return;
     }
 
+    toast({
+      title: response.data.msg,
+    });
+
     // 파일 업로드 처리
     if (data.attachment_0) {
       const formData = new FormData();
@@ -113,11 +117,11 @@ export default function ClientPage({
         });
         return;
       }
-    }
 
-    toast({
-      title: response.data.msg,
-    });
+      toast({
+        title: uploadResponse.data.msg,
+      });
+    }
 
     router.replace("/post/list");
   };
