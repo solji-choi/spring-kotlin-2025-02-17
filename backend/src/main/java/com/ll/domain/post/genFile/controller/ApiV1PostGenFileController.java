@@ -9,6 +9,7 @@ import com.ll.global.app.AppConfig;
 import com.ll.global.exceptions.ServiceException;
 import com.ll.global.rq.Rq;
 import com.ll.global.rsData.RsData;
+import com.ll.standard.base.Empty;
 import com.ll.standard.util.Ut;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -115,5 +116,29 @@ public class ApiV1PostGenFileController {
         );
 
         return new PostGenFileDto(postGenFile);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    @Operation(summary = "삭제")
+    public RsData<Empty> delete(
+            @PathVariable long postId,
+            @PathVariable long id
+    ) {
+        Post post = postService.findById(postId).orElseThrow(
+                () -> new ServiceException("404-1", "%d번 글은 존재하지 않습니다.".formatted(postId))
+        );
+
+        PostGenFile postGenFile = post.getGenFileById(id).orElseThrow(
+                () -> new ServiceException("404-2", "%d번 파일은 존재하지 않습니다.".formatted(id))
+        );
+
+        post.deleteGenFile(postGenFile);
+
+        return new RsData<>(
+                "200-1",
+                "%d번 파일이 삭제되었습니다.".formatted(id)
+        );
     }
 }
