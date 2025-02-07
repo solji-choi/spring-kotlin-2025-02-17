@@ -23,6 +23,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -391,6 +392,10 @@ public class Ut {
         public static String getCurrentDateFormatted(String pattern) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             return simpleDateFormat.format(new Date());
+        }
+
+        public static String patternOf(LocalDateTime date, String pattern) {
+            return date.format(java.time.format.DateTimeFormatter.ofPattern(pattern));
         }
     }
 

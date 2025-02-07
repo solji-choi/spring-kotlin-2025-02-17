@@ -2,6 +2,7 @@ package com.ll.domain.base.genFile.genFile.entity;
 
 import com.ll.global.app.AppConfig;
 import com.ll.global.jpa.entity.BaseTime;
+import com.ll.standard.util.Ut;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,7 +57,7 @@ public abstract class GenFile extends BaseTime {
     }
 
     public String getPublicUrl() {
-        return AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName;
+        return AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName + "?modifyDate=" + Ut.date.patternOf(getModifyDate(), "yyyy-MM-dd-HH-mm-ss");
     }
 
     abstract protected long getOwnerModelId();
