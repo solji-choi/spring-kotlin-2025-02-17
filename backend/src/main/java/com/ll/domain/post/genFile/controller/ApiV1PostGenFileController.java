@@ -192,11 +192,19 @@ public class ApiV1PostGenFileController {
 
         PostGenFile postGenFile = post.putGenFile(typeCode, fileNo, filePath);
 
+        boolean justCreated = postGenFile.getId() == null;
+
+        if (typeCode == PostGenFile.TypeCode.thumbnail) {
+            // 만약에 등록된게 썸네일 이라면
+            // 해당 썸네일의 주인(글)에도 직접 참조를 넣는다.
+            post.setThumbnailGenFile(postGenFile);
+        }
+
         postService.flush();
 
         return new RsData<>(
                 "200-1",
-                "%d번 파일이 수정되었습니다.".formatted(postGenFile.getId()),
+                justCreated ? "%d번 파일이 생성되었습니다.".formatted(postGenFile.getId()) : "%d번 파일이 수정되었습니다.".formatted(postGenFile.getId()),
                 new PostGenFileDto(postGenFile)
         );
     }
