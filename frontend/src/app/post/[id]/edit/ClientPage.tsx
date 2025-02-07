@@ -118,7 +118,7 @@ export default function ClientPage({
               fileNo: 1,
             },
             query: {
-              metaStr: "darkInvertable=1",
+              metaStr: "darkInvertible=1",
             },
           },
           body: formData as any, // eslint-disable-line @typescript-eslint/no-explicit-any
