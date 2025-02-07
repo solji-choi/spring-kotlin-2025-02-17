@@ -54,12 +54,12 @@ export default function ClientPage({
                 className="w-[40px] h-[40px] object-cover rounded-full ring-2 ring-primary/10"
               />
               <div>
-                <p className="text-sm font-medium text-foreground">
+                <div className="text-sm font-medium text-foreground">
                   {post.authorName}
-                </p>
-                <p className="text-xs text-muted-foreground">
+                </div>
+                <div className="text-sm text-muted-foreground">
                   {getDateHr(post.createDate)}
-                </p>
+                </div>
               </div>
             </div>
             <div className="flex-grow"></div>
@@ -79,13 +79,11 @@ export default function ClientPage({
         </CardHeader>
         <CardContent>
           <div className="whitespace-pre-line">{post.content}</div>
-          <div>
-            {post.createDate != post.modifyDate && (
-              <p className="text-xs text-muted-foreground">
-                {getDateHr(post.modifyDate)}에 수정됨
-              </p>
-            )}
-          </div>
+          {post.createDate != post.modifyDate && (
+            <div className="mt-4 text-sm text-muted-foreground">
+              {getDateHr(post.modifyDate)}에 수정됨
+            </div>
+          )}
         </CardContent>
         <CardFooter>
           <div className="grid gap-4">

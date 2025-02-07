@@ -67,15 +67,18 @@ export function getSummaryFromContent(content: string) {
       summary.slice(1).search(/(\n\n|\#)/) !== -1
         ? summary.slice(1).search(/(\n\n|\#)/)
         : summary.length;
+
     if (endIndex !== -1) {
-      summary = summary.slice(4, endIndex).trim();
-      // 각 줄의 시작 부분에서 '- ' 또는 '-'를 제거
-      summary = summary
-        .split("\n")
-        .map((line) => line.replace(/^-\s*/, ""))
-        .join("\n");
+      summary = summary.slice(4, endIndex + 1).trim();
     }
+
+    summary = summary
+      .split("\n")
+      .map((line) => line.replace(/^-\s*/, ""))
+      .join("\n");
+
+    return summary.trim();
   }
 
-  return summary;
+  return "";
 }
