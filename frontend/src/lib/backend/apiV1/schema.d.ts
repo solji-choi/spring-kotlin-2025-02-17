@@ -523,7 +523,9 @@ export type $defs = Record<string, never>;
 export interface operations {
     modify: {
         parameters: {
-            query?: never;
+            query?: {
+                metaStr?: string;
+            };
             header?: never;
             path: {
                 postId: number;
