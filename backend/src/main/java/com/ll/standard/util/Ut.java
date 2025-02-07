@@ -36,6 +36,10 @@ public class Ut {
         public static String lcfirst(String str) {
             return Character.toLowerCase(str.charAt(0)) + str.substring(1);
         }
+
+        public static boolean isNotBlank(String str) {
+            return !isBlank(str);
+        }
     }
 
     public static class json {
@@ -98,6 +102,7 @@ public class Ut {
 
     public static class file {
         private static final String ORIGINAL_FILE_NAME_SEPARATOR = "--originalFileName_";
+        public static final String META_STR_SEPARATOR = "_metaStr--";
 
         private static final Map<String, String> MIME_TYPE_MAP = new LinkedHashMap<>() {{
             put("application/json", "json");
@@ -328,10 +333,19 @@ public class Ut {
 
         @SneakyThrows
         public static String toFile(MultipartFile multipartFile, String dirPath) {
+            return toFile(multipartFile, dirPath, "");
+        }
+
+        @SneakyThrows
+        public static String toFile(MultipartFile multipartFile, String dirPath, String metaStr) {
             if (multipartFile == null) return "";
             if (multipartFile.isEmpty()) return "";
 
-            String filePath = dirPath + "/" + UUID.randomUUID() + ORIGINAL_FILE_NAME_SEPARATOR + multipartFile.getOriginalFilename();
+            String fileName = str.isBlank(metaStr)
+                    ? UUID.randomUUID() + ORIGINAL_FILE_NAME_SEPARATOR + multipartFile.getOriginalFilename()
+                    : metaStr + META_STR_SEPARATOR + UUID.randomUUID() + ORIGINAL_FILE_NAME_SEPARATOR + multipartFile.getOriginalFilename();
+
+            String filePath = dirPath + "/" + fileName;
 
             Ut.file.mkdir(dirPath);
             multipartFile.transferTo(new File(filePath));
@@ -369,6 +383,13 @@ public class Ut {
             String ext = getFileExt(filePath);
 
             return getFileExtTypeCodeFromFileExt(ext);
+        }
+
+        public static String getMetadataStrFromFileName(String filePath) {
+            String fileName = Path.of(filePath).getFileName().toString();
+            return fileName.contains(META_STR_SEPARATOR)
+                    ? fileName.substring(0, fileName.indexOf(META_STR_SEPARATOR))
+                    : "";
         }
     }
 

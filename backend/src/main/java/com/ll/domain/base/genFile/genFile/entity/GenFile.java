@@ -57,7 +57,7 @@ public abstract class GenFile extends BaseTime {
     }
 
     public String getPublicUrl() {
-        return AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName + "?modifyDate=" + Ut.date.patternOf(getModifyDate(), "yyyy-MM-dd-HH-mm-ss");
+        return AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName + "?modifyDate=" + Ut.date.patternOf(getModifyDate(), "yyyy-MM-dd--HH-mm-ss") + "&" + metadata;
     }
 
     abstract protected long getOwnerModelId();

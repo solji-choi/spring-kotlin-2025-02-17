@@ -142,12 +142,21 @@ public class Post extends BaseTime {
     private PostGenFile processGenFile(PostGenFile oldPostGenFile, PostGenFile.TypeCode typeCode, int fileNo, String filePath) {
         boolean isModify = oldPostGenFile != null;
         String originalFileName = Ut.file.getOriginalFileName(filePath);
+        String metadataStrFromFileName = Ut.file.getMetadataStrFromFileName(filePath);
         String fileExt = Ut.file.getFileExt(filePath);
         String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
         String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
+
         String metadataStr = Ut.file.getMetadata(filePath).entrySet().stream()
-                .map(entry -> entry.getKey() + "-" + entry.getValue())
-                .collect(Collectors.joining(";"));
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("&"));
+
+        if (Ut.str.isNotBlank(metadataStrFromFileName)) {
+            metadataStr = Ut.str.isNotBlank(metadataStr)
+                    ? metadataStr + "&" + metadataStrFromFileName
+                    : metadataStrFromFileName;
+        }
+
         String fileName = isModify ? Ut.file.withNewExt(oldPostGenFile.getFileName(), fileExt) : UUID.randomUUID() + "." + fileExt;
         int fileSize = Ut.file.getFileSize(filePath);
         fileNo = fileNo == 0 ? getNextGenFileNo(typeCode) : fileNo;

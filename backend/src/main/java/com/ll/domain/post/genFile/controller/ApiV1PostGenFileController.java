@@ -169,7 +169,8 @@ public class ApiV1PostGenFileController {
             @PathVariable long postId,
             @PathVariable PostGenFile.TypeCode typeCode,
             @PathVariable int fileNo,
-            @NonNull @RequestPart("file") MultipartFile file
+            @NonNull @RequestPart("file") MultipartFile file,
+            @RequestParam(defaultValue = "") String metaStr
     ) {
         if (typeCode == PostGenFile.TypeCode.thumbnail && fileNo > 1) {
             throw new ServiceException("400-1", "썸네일은 1개만 등록할 수 있습니다.");
@@ -181,7 +182,8 @@ public class ApiV1PostGenFileController {
 
         String filePath = Ut.file.toFile(
                 file,
-                AppConfig.getTempDirPath()
+                AppConfig.getTempDirPath(),
+                metaStr
         );
 
         if (typeCode == PostGenFile.TypeCode.thumbnail && !Ut.file.getFileExtTypeCodeFromFilePath(filePath).equals("img")) {
