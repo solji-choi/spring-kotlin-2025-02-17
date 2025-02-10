@@ -15,6 +15,53 @@ import { forwardRef } from "react";
 
 import { filterObjectKeys, isExternalUrl } from "../utils";
 
+function hidePlugin() {
+  const toHTMLRenderers = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    hide(node: any) {
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: "" },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  return { toHTMLRenderers };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function pptPlugin() {
+  const toHTMLRenderers = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    ppt(node: any) {
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: "" },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  return { toHTMLRenderers };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function configPlugin() {
+  const toHTMLRenderers = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    config(node: any) {
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: "" },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  return { toHTMLRenderers };
+}
+
 export interface ToastUIEditorViewerCoreProps {
   initialValue: string;
   theme: "dark" | "light";
@@ -27,6 +74,9 @@ const ToastUIEditorViewerCore = forwardRef<any, ToastUIEditorViewerCoreProps>(
       <Viewer
         theme={props.theme}
         plugins={[
+          hidePlugin,
+          pptPlugin,
+          configPlugin,
           codeSyntaxHighlight,
           [
             chart,
