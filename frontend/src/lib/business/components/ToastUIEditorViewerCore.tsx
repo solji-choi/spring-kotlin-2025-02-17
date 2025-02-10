@@ -25,6 +25,7 @@ const ToastUIEditorViewerCore = forwardRef<any, ToastUIEditorViewerCoreProps>(
         ref={ref}
         initialValue={props.initialValue}
         language="ko-KR"
+        linkAttributes={{ target: "_blank" }}
         customHTMLRenderer={{
           htmlBlock: {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
