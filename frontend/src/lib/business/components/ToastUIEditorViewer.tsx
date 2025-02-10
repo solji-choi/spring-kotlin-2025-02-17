@@ -4,6 +4,8 @@ import { forwardRef } from "react";
 
 import dynamic from "next/dynamic";
 
+import { ToastUIEditorViewerCoreProps } from "./ToastUIEditorViewerCore";
+
 const ToastUIEditorViewerCore = dynamic(
   () => import("./ToastUIEditorViewerCore"),
   {
@@ -12,9 +14,7 @@ const ToastUIEditorViewerCore = dynamic(
   },
 );
 
-interface ViewerProps {
-  initialValue: string;
-}
+type ViewerProps = ToastUIEditorViewerCoreProps;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ToastUIEditorViewer = forwardRef<any, ViewerProps>((props, ref) => {
