@@ -13,7 +13,7 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Viewer } from "@toast-ui/react-editor";
 import { forwardRef } from "react";
 
-import { filterObjectKeys, isExternalUrl } from "../utils";
+import { filterObjectKeys, getParamsFromUrl, isExternalUrl } from "../utils";
 
 function hidePlugin() {
   const toHTMLRenderers = {
@@ -62,6 +62,58 @@ function configPlugin() {
   return { toHTMLRenderers };
 }
 
+function codepenPlugin() {
+  const toHTMLRenderers = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    codepen(node: any) {
+      const html = renderCodepen(node.literal);
+      return [
+        { type: "openTag", tagName: "div", outerNewLine: true },
+        { type: "html", content: html },
+        { type: "closeTag", tagName: "div", outerNewLine: true },
+      ];
+    },
+  };
+
+  function renderCodepen(url: string) {
+    const urlParams = getParamsFromUrl(url);
+
+    let height = "400";
+
+    if (urlParams.height) {
+      height = urlParams.height;
+    }
+
+    let width = "100%";
+
+    if (urlParams.width) {
+      width = urlParams.width;
+    }
+
+    if (!width.includes("px") && !width.includes("%")) {
+      width += "px";
+    }
+
+    let iframeUri = url;
+
+    if (iframeUri.indexOf("#") !== -1) {
+      const pos = iframeUri.indexOf("#");
+      iframeUri = iframeUri.substring(0, pos);
+    }
+
+    return (
+      '<iframe class="my-4" height="' +
+      height +
+      '" style="width: ' +
+      width +
+      ';" title="" src="' +
+      iframeUri +
+      '" allowtransparency="true" allowfullscreen="true"></iframe>'
+    );
+  }
+  return { toHTMLRenderers };
+}
+
 export interface ToastUIEditorViewerCoreProps {
   initialValue: string;
   theme: "dark" | "light";
@@ -74,6 +126,7 @@ const ToastUIEditorViewerCore = forwardRef<any, ToastUIEditorViewerCoreProps>(
       <Viewer
         theme={props.theme}
         plugins={[
+          codepenPlugin,
           hidePlugin,
           pptPlugin,
           configPlugin,
@@ -131,6 +184,7 @@ const ToastUIEditorViewerCore = forwardRef<any, ToastUIEditorViewerCoreProps>(
                 "allowfullscreen",
                 "frameborder",
                 "scrolling",
+                "class",
               ]);
               return [
                 {
