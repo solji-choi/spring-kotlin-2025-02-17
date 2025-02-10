@@ -8,6 +8,8 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Viewer } from "@toast-ui/react-editor";
 import { forwardRef } from "react";
 
+import { filterObjectKeys } from "../utils";
+
 export interface ToastUIEditorViewerCoreProps {
   initialValue: string;
   theme: "dark" | "light";
@@ -23,6 +25,32 @@ const ToastUIEditorViewerCore = forwardRef<any, ToastUIEditorViewerCoreProps>(
         ref={ref}
         initialValue={props.initialValue}
         language="ko-KR"
+        customHTMLRenderer={{
+          htmlBlock: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            iframe(node: any) {
+              const newAttrs = filterObjectKeys(node.attrs, [
+                "src",
+                "width",
+                "height",
+                "allow",
+                "allowfullscreen",
+                "frameborder",
+                "scrolling",
+              ]);
+              return [
+                {
+                  type: "openTag",
+                  tagName: "iframe",
+                  outerNewLine: true,
+                  attributes: newAttrs,
+                },
+                { type: "html", content: node.childrenHTML },
+                { type: "closeTag", tagName: "iframe", outerNewLine: false },
+              ];
+            },
+          },
+        }}
       />
     );
   },

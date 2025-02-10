@@ -82,3 +82,18 @@ export function getSummaryFromContent(content: string) {
 
   return "";
 }
+
+// 객체에서 특정 키만 필터링하는 유틸리티 함수
+export function filterObjectKeys(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: { [key: string]: any },
+  allowedKeys: string[],
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return Object.keys(obj).reduce((filtered: { [key: string]: any }, key) => {
+    if (allowedKeys.includes(key)) {
+      filtered[key] = obj[key];
+    }
+    return filtered;
+  }, {});
+}
