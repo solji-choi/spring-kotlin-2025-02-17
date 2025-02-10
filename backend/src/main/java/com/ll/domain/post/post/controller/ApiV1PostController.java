@@ -22,6 +22,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
@@ -102,8 +104,15 @@ public class ApiV1PostController {
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     @Operation(summary = "단건 조회", description = "비밀글은 작성자만 조회 가능")
-    public PostWithContentDto item(@PathVariable long id) {
+    public PostWithContentDto item(
+            @PathVariable long id,
+            @RequestParam(defaultValue = "") LocalDateTime lastModifyDateAfter
+    ) {
         Post post = postService.findById(id).get();
+
+        if (lastModifyDateAfter != null && !post.getModifyDate().isAfter(lastModifyDateAfter)) {
+            throw new ServiceException("412-1", "변경된 데이터가 없습니다.");
+        }
 
         if (!post.isPublished()) {
             Member actor = rq.getActor();
