@@ -30,7 +30,6 @@ function hidePlugin() {
   return { toHTMLRenderers };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function pptPlugin() {
   const toHTMLRenderers = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
@@ -46,7 +45,6 @@ function pptPlugin() {
   return { toHTMLRenderers };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function configPlugin() {
   const toHTMLRenderers = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars

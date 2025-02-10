@@ -736,7 +736,9 @@ export interface operations {
     };
     item_1: {
         parameters: {
-            query?: never;
+            query?: {
+                lastModifyDateAfter?: string;
+            };
             header?: never;
             path: {
                 id: number;
