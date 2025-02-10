@@ -8,7 +8,7 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Viewer } from "@toast-ui/react-editor";
 import { forwardRef } from "react";
 
-import { filterObjectKeys } from "../utils";
+import { filterObjectKeys, isExternalUrl } from "../utils";
 
 export interface ToastUIEditorViewerCoreProps {
   initialValue: string;
@@ -25,8 +25,28 @@ const ToastUIEditorViewerCore = forwardRef<any, ToastUIEditorViewerCoreProps>(
         ref={ref}
         initialValue={props.initialValue}
         language="ko-KR"
-        linkAttributes={{ target: "_blank" }}
         customHTMLRenderer={{
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          heading(node: any, { entering, getChildrenText }: any) {
+            return {
+              type: entering ? "openTag" : "closeTag",
+              tagName: `h${node.level}`,
+              attributes: {
+                id: getChildrenText(node).trim().replaceAll(" ", "-"),
+              },
+            };
+          },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          link(node: any, { entering }: any) {
+            return {
+              type: entering ? "openTag" : "closeTag",
+              tagName: `a`,
+              attributes: {
+                href: node.destination,
+                target: isExternalUrl(node.destination) ? "_blank" : "_self",
+              },
+            };
+          },
           htmlBlock: {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             iframe(node: any) {
