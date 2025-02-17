@@ -11,9 +11,7 @@ import javax.crypto.SecretKey;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -400,8 +398,33 @@ public class Ut {
 
         public static void run(String cmd) {
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", cmd);
+                String os = System.getProperty("os.name").toLowerCase();
+                ProcessBuilder processBuilder;
+
+                if (os.contains("win")) {
+                    // Windows 시스템에서는 Git Bash 경로 사용
+                    processBuilder = new ProcessBuilder("C:\\Program Files\\Git\\bin\\bash.exe", "-c", cmd);
+                } else {
+                    // macOS 또는 Linux 시스템에서는 bash 사용
+                    processBuilder = new ProcessBuilder("bash", "-c", cmd);
+                }
+
                 Process process = processBuilder.start();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+
+                // 프로세스의 출력 읽기
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line); // IntelliJ 콘솔에 출력
+                }
+
+                // 에러 출력 읽기
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                while ((line = errorReader.readLine()) != null) {
+                    System.err.println(line); // 에러 메시지를 IntelliJ 콘솔에 출력
+                }
+
                 process.waitFor(1, TimeUnit.MINUTES);
             } catch (Exception e) {
                 e.printStackTrace();

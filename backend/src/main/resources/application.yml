@@ -5,7 +5,7 @@ server:
     max-http-form-post-size: 1GB
 spring:
   application:
-    name: spring-next-js-upload-2025-01-31
+    name: spring-kotlin-2025-02-17
   profiles:
     active: dev
     include: secret

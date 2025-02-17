@@ -1,1 +1,1 @@
-rootProject.name = "spring-next-js-upload-2025-01-31"
+rootProject.name = "spring-kotlin-2025-02-17"
