@@ -35,7 +35,7 @@ abstract class GenFile : BaseTime {
     }
 
     val filePath: String
-        get() = AppConfig.getGenFileDirPath() + "/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName;
+        get() = AppConfig.getGenFileDirPath() + "/" + modelName + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName;
 
     val ownerModelName: String
         get() = modelName.replace("GenFile", "");
@@ -44,7 +44,7 @@ abstract class GenFile : BaseTime {
         get() = AppConfig.getSiteBackUrl() + "/" + ownerModelName + "/genFile/download/" + getOwnerModelId() + "/" + fileName;
 
     val publicUrl: String
-        get() = AppConfig.getSiteBackUrl() + "/gen/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName + "?modifyDate=" + Ut.date.patternOf(
+        get() = AppConfig.getSiteBackUrl() + "/gen/" + modelName + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName + "?modifyDate=" + Ut.date.patternOf(
             modifyDate,
             "yyyy-MM-dd--HH-mm-ss"
         ) + "&" + metadata;
