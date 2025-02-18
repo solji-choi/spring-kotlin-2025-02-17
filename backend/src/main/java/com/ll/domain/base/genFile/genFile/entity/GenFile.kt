@@ -21,6 +21,19 @@ abstract class GenFile : BaseTime {
         this.fileNo = fileNo;
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other != null &&
+                this::class == other::class && // javaClass 비교를 더 안전하게 변경
+                other is GenFile &&
+                fileNo == other.fileNo &&
+                getOwnerModelId() == other.getOwnerModelId() &&
+                getTypeCodeAsStr() == other.getTypeCodeAsStr()
+    }
+
+    override fun hashCode(): Int {
+        return listOf(fileNo, getOwnerModelId(), getTypeCodeAsStr()).hashCode()
+    }
+
     val filePath: String
         get() = AppConfig.getGenFileDirPath() + "/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName;
 

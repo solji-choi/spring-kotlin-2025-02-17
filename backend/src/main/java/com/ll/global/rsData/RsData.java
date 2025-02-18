@@ -22,6 +22,21 @@ public class RsData<T> {
     @NonNull
     private final T data;
 
+    @NonNull
+    public String getResultCode() {
+        return resultCode;
+    }
+
+    @NonNull
+    public String getMsg() {
+        return msg;
+    }
+
+    @NonNull
+    public T getData() {
+        return data;
+    }
+
     public RsData(String resultCode, String msg) {
         this(resultCode, msg, (T) new Empty());
     }
