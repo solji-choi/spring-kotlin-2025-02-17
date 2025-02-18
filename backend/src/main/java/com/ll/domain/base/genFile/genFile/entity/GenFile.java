@@ -7,13 +7,11 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Objects;
 
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class GenFile extends BaseTime {
@@ -26,6 +24,10 @@ public abstract class GenFile extends BaseTime {
     private String fileExtType2Code;
     private String fileName;
     private int fileSize;
+
+    public GenFile(int fileNo) {
+        this.fileNo = fileNo;
+    }
 
     public String getFilePath() {
         return AppConfig.getGenFileDirPath() + "/" + getModelName() + "/" + getTypeCodeAsStr() + "/" + fileDateDir + "/" + fileName;

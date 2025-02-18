@@ -9,11 +9,9 @@ import com.ll.global.rsData.RsData;
 import com.ll.standard.base.Empty;
 import com.ll.standard.util.Ut;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,6 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
 public class Post extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,11 +34,9 @@ public class Post extends BaseTime {
     private String content;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @Builder.Default
     private List<PostComment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @Builder.Default
     private List<PostGenFile> genFiles = new ArrayList<>();
 
     // OneToOne 은 레이지 로딩이 안된다.
@@ -52,12 +47,19 @@ public class Post extends BaseTime {
 
     private boolean listed;
 
+    public Post(Member author, String title, String content, boolean published, boolean listed) {
+        this.author = author;
+        this.title = title;
+        this.content = content;
+        this.published = published;
+        this.listed = listed;
+    }
+
     public PostComment addComment(Member author, String content) {
-        PostComment comment = PostComment.builder()
-                .post(this)
-                .author(author)
-                .content(content)
-                .build();
+        PostComment comment = new PostComment(
+                this,
+                author,
+                content);
 
         comments.add(comment);
 
@@ -161,12 +163,10 @@ public class Post extends BaseTime {
         int fileSize = Ut.file.getFileSize(filePath);
         fileNo = fileNo == 0 ? getNextGenFileNo(typeCode) : fileNo;
 
-        PostGenFile genFile = isModify ? oldPostGenFile : PostGenFile
-                .builder()
-                .post(this)
-                .typeCode(typeCode)
-                .fileNo(fileNo)
-                .build();
+        PostGenFile genFile = isModify ? oldPostGenFile : new PostGenFile(
+                this,
+                typeCode,
+                fileNo);
 
         genFile.setOriginalFileName(originalFileName);
         genFile.setMetadata(metadataStr);

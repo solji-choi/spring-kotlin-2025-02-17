@@ -10,11 +10,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@SuperBuilder
 @NoArgsConstructor
 public class PostComment extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,6 +23,12 @@ public class PostComment extends BaseTime {
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    public PostComment(Post post, Member author, String content) {
+        this.post = post;
+        this. author = author;
+        this.content = content;
+    }
 
     public void modify(String content) {
         this.content = content;
@@ -47,4 +51,5 @@ public class PostComment extends BaseTime {
 
         throw new ServiceException("403-2", "작성자만 댓글을 삭제할 수 있습니다.");
     }
+
 }
