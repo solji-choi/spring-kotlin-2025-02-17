@@ -2,10 +2,10 @@ package com.ll.standard.sampleResource;
 
 import com.ll.global.app.AppConfig;
 import com.ll.standard.util.Ut;
+import com.ll.standard.util.Ut.file.getFileExt
 import lombok.Getter;
 
-@Getter
-public enum SampleResource {
+enum class SampleResource {
     AUDIO_M4A_SAMPLE1("sample1-728s.m4a", 0, 0, 728),
     AUDIO_MP3_SAMPLE1("sample1-42s.mp3", 0, 0, 42),
     AUDIO_MP3_SAMPLE2("sample2-9s.mp3", 0, 0, 9),
