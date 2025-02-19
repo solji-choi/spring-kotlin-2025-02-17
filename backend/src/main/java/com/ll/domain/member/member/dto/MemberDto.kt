@@ -12,7 +12,7 @@ open class MemberDto(
     val profileImgUrl: String
 ) {
     constructor(member: Member) : this(
-        id = member.id!!,
+        id = member.id,
         createDate = member.createDate,
         modifyDate = member.modifyDate,
         nickname = member.nickname,
