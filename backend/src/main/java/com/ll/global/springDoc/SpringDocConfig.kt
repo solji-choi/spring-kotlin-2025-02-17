@@ -9,27 +9,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "API 서버", version = "v1"))
-@SecurityScheme(
-        name = "bearerAuth",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        scheme = "bearer"
-)
-public class SpringDocConfig {
+@OpenAPIDefinition(info = Info(title = "API 서버", version = "v1"))
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
+class SpringDocConfig {
     @Bean
-    public GroupedOpenApi groupApiV1() {
+    fun groupApiV1(): GroupedOpenApi {
         return GroupedOpenApi.builder()
-                .group("apiV1")
-                .pathsToMatch("/api/v1/**")
-                .build();
+            .group("apiV1")
+            .pathsToMatch("/api/v1/**")
+            .build()
     }
 
     @Bean
-    public GroupedOpenApi groupController() {
+    fun groupController(): GroupedOpenApi {
         return GroupedOpenApi.builder()
-                .group("controller")
-                .pathsToExclude("/api/**")
-                .build();
+            .group("controller")
+            .pathsToExclude("/api/**")
+            .build()
     }
 }
