@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class AuthTokenService {
+class AuthTokenService(
     @Value("\${custom.jwt.secretKey}")
-    private val jwtSecretKey: String? = null
+    private val jwtSecretKey: String,
 
     @Value("\${custom.accessToken.expirationSeconds}")
-    private val accessTokenExpirationSeconds: Long = 0
-
+    private val accessTokenExpirationSeconds: Long
+) {
     fun genAccessToken(member: Member): String {
         val id = member.id
         val username = member.username
         val nickname = member.nickname
 
         return toString(
-            jwtSecretKey!!,
+            jwtSecretKey,
             accessTokenExpirationSeconds,
             java.util.Map.of(
                 "id", id,
@@ -32,18 +32,18 @@ class AuthTokenService {
     }
 
     fun payload(accessToken: String): Map<String, Any?>? {
-        val parsedPayload = payload(jwtSecretKey!!, accessToken) ?: return null
+        val parsedPayload = payload(jwtSecretKey, accessToken) ?: return null
 
-        val id = (parsedPayload["id"] as Int?)!!.toLong()
-        val username = parsedPayload["username"] as String?
-        val nickname = parsedPayload["nickname"] as String?
-        val authorities = parsedPayload["authorities"] as List<String>?
+        val id = (parsedPayload["id"] as Int).toLong()
+        val username = parsedPayload["username"] as String
+        val nickname = parsedPayload["nickname"] as String
+        val authorities = parsedPayload["authorities"] as List<String>
 
-        return java.util.Map.of(
-            "id", id,
-            "username", username,
-            "nickname", nickname,
-            "authorities", authorities
+        return mapOf(
+            "id" to id,
+            "username" to username,
+            "nickname" to nickname,
+            "authorities" to authorities
         )
     }
 }
