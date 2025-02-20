@@ -5,9 +5,7 @@ import com.ll.global.app.AppConfig
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
-import java.io.IOException
-import java.io.UnsupportedEncodingException
+import java.io.*
 import java.net.URI
 import java.net.URISyntaxException
 import java.net.URLEncoder
@@ -406,8 +404,34 @@ object Ut {
         @JvmStatic
         fun run(cmd: String) {
             try {
-                val processBuilder = ProcessBuilder("bash", "-c", cmd)
+                val os = System.getProperty("os.name").lowercase(Locale.getDefault())
+
+                val processBuilder = if (os.contains("win")) {
+                    // Windows 시스템에서는 Git Bash 경로 사용
+                    ProcessBuilder("C:\\Program Files\\Git\\bin\\bash.exe", "-c", cmd)
+                } else {
+                    // macOS 또는 Linux 시스템에서는 bash 사용
+                    ProcessBuilder("bash", "-c", cmd)
+                }
+
                 val process = processBuilder.start()
+
+                val reader = BufferedReader(InputStreamReader(process.inputStream))
+                var line: String
+
+
+                // 프로세스의 출력 읽기
+                while ((reader.readLine().also { line = it }) != null) {
+                    println(line) // IntelliJ 콘솔에 출력
+                }
+
+
+                // 에러 출력 읽기
+                val errorReader = BufferedReader(InputStreamReader(process.errorStream))
+                while ((errorReader.readLine().also { line = it }) != null) {
+                    System.err.println(line) // 에러 메시지를 IntelliJ 콘솔에 출력
+                }
+
                 process.waitFor(1, TimeUnit.MINUTES)
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -337,9 +337,9 @@ export interface components {
             typeCode: "attachment" | "thumbnail";
             fileExtTypeCode: string;
             fileExtType2Code: string;
-            /** Format: int64 */
+            /** Format: int32 */
             fileSize: number;
-            /** Format: int64 */
+            /** Format: int32 */
             fileNo: number;
             fileExt: string;
             fileDateDir: string;
@@ -377,8 +377,8 @@ export interface components {
         PostModifyReqBody: {
             title: string;
             content: string;
-            published?: boolean;
-            listed?: boolean;
+            published: boolean;
+            listed: boolean;
         };
         PostDto: {
             /** Format: int64 */
@@ -422,8 +422,8 @@ export interface components {
         PostWriteReqBody: {
             title: string;
             content: string;
-            published?: boolean;
-            listed?: boolean;
+            published: boolean;
+            listed: boolean;
         };
         RsDataListPostGenFileDto: {
             resultCode: string;
@@ -463,7 +463,102 @@ export interface components {
             totalItems: number;
             items: components["schemas"]["PostDto"][];
         };
+        GrantedAuthority: {
+            authority?: string;
+        };
+        Member: {
+            /** Format: int64 */
+            get_id?: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            username: string;
+            password: string;
+            nickname: string;
+            apiKey: string;
+            profileImgUrl: string;
+            name: string;
+            authoritiesAsStringList: string[];
+            authorities: components["schemas"]["GrantedAuthority"][];
+            isAdmin: boolean;
+            profileImgUrlOrDefault: string;
+            /** Format: int64 */
+            id: number;
+            modelName: string;
+        };
+        Post: {
+            author: components["schemas"]["Member"];
+            title: string;
+            content: string;
+            published: boolean;
+            listed: boolean;
+            /** Format: int64 */
+            get_id?: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            comments: components["schemas"]["PostComment"][];
+            genFiles: components["schemas"]["PostGenFile"][];
+            thumbnailGenFile?: components["schemas"]["PostGenFile"];
+            thumbnailImgUrlOrDefault: string;
+            isTemp: boolean;
+            isPublished: boolean;
+            isListed: boolean;
+            commentsByOrderByIdDesc: components["schemas"]["PostComment"][];
+            /** Format: int64 */
+            id: number;
+            modelName: string;
+        };
+        PostComment: {
+            post: components["schemas"]["Post"];
+            author: components["schemas"]["Member"];
+            content: string;
+            /** Format: int64 */
+            get_id?: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            /** Format: int64 */
+            id: number;
+            modelName: string;
+        };
+        PostGenFile: {
+            post: components["schemas"]["Post"];
+            /** @enum {string} */
+            typeCode: "attachment" | "thumbnail";
+            /** Format: int32 */
+            fileNo: number;
+            /** Format: int64 */
+            get_id?: number;
+            /** Format: date-time */
+            createDate: string;
+            /** Format: date-time */
+            modifyDate: string;
+            originalFileName: string;
+            metadata: string;
+            fileDateDir: string;
+            fileExt: string;
+            fileExtTypeCode: string;
+            fileExtType2Code: string;
+            fileName: string;
+            /** Format: int32 */
+            fileSize: number;
+            filePath: string;
+            ownerModelName: string;
+            downloadUrl: string;
+            publicUrl: string;
+            /** Format: int64 */
+            id: number;
+            modelName: string;
+        };
         PostWithContentDto: {
+            content: string;
+            actorCanModify?: boolean;
+            actorCanDelete?: boolean;
+            post?: components["schemas"]["Post"];
             /** Format: int64 */
             id: number;
             /** Format: date-time */
@@ -478,9 +573,6 @@ export interface components {
             published: boolean;
             listed: boolean;
             thumbnailImgUrl: string;
-            content: string;
-            actorCanModify?: boolean;
-            actorCanDelete?: boolean;
         };
         PostStatisticsResBody: {
             /** Format: int64 */
@@ -491,6 +583,7 @@ export interface components {
             totalListedPostCount: number;
         };
         MemberWithUsernameDto: {
+            member?: components["schemas"]["Member"];
             /** Format: int64 */
             id: number;
             /** Format: date-time */
